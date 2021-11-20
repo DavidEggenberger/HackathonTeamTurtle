@@ -13,6 +13,7 @@ namespace Infrastructure.Persistance
 {
     public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>
     {
+        public DbSet<LearningPath> LearningPaths { get; set; }
         public ApplicationDbContext(
            DbContextOptions options,
            IOptions<OperationalStoreOptions> operationalStoreOptions) : base(options, operationalStoreOptions)

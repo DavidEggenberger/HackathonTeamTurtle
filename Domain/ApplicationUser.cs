@@ -12,5 +12,7 @@ namespace Domain
         public bool IsOnline { get; set; }
         public string Motto { get; set; }
         public List<LearningPath> CreatedLearningPaths { get; set; }
+        public List<LearningPathEnrollment> EnrolledLearningPaths { get; set; }
+        public List<LearningPathMessage> SentLearningPathMessages { get; set; }
     }
 }

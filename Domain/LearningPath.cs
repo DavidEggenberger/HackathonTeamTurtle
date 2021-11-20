@@ -14,5 +14,7 @@ namespace Domain
         public TimeSpan EstimatedCompletionTime { get; set; }
         public string Name { get; set; }
         public List<LearningPathPillar> Pillars { get; set; }
+        public List<LearningPathEnrollment> EnrolledUsers { get; set; }
+        public List<LearningPathMessage> Messages { get; set; }
     }
 }

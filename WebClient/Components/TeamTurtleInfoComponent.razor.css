@@ -1,0 +1,35 @@
+﻿.TeamTurtleComponent {
+    border-radius: 5px;
+    background: rgba(62,180,137,0.3);
+    margin: 0 auto;
+    height: 100px;
+    width: 100%;
+    border: 1px solid white;
+    backdrop-filter: blur(4px);
+    display: flex;
+    padding: 5px;
+    box-sizing: border-box;
+}
+h3{
+    color: white;
+    position: relative;
+    align-self: flex-start;
+}
+h3::after{
+    bottom: -4px;
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background-color: rgba(62,180,137,1);
+}
+.StrivesToBe{
+    margin-left: 35px;
+}
+h4{
+    margin-bottom: 5px;
+}
+ul{
+    margin-top: 5px;
+}

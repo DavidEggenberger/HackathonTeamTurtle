@@ -4,7 +4,22 @@
 @inject SignOutSessionStateManager SignOutManager
 @inject IAccessTokenProvider tokenProvider
 
-<h2>@hubConnection?.State</h2>
+<AuthorizeView>
+    <Authorized>
+        <div class="LearningPathDisplaysContainer">
+            <LearningPathsDisplayComponent />
+        </div>
+    </Authorized>
+    <NotAuthorized>
+        <div class="TeamTurtleInfoComponentContainer">
+            <TeamTurtleInfoComponent />
+        </div>
+        <div class="LearningPathDisplaysContainer">
+            <LearningPathsDisplayComponent/>
+        </div>
+    </NotAuthorized>
+</AuthorizeView>
+
 
 @code{
     [CascadingParameter]

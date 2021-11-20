@@ -1,6 +1,7 @@
 ﻿using Domain;
 using DTOs;
 using Infrastructure.Persistance;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -39,6 +40,7 @@ namespace WebAPI.Controller
             }).ToList());
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<ActionResult> CreateLearningPath(LearningPathDTO learningPathDTO)
         {
@@ -56,6 +58,23 @@ namespace WebAPI.Controller
                         Name = ressource.Name
                     }).ToList()
                 }).ToList()
+            });
+            await applicationDbContext.SaveChangesAsync();
+            return Ok();
+        }
+
+        [Authorize]
+        [HttpPost("{learningPathId}")]
+        public async Task<ActionResult> EnrollInLearningPath(Guid learningPathId)
+        {
+            ApplicationUser applicationUser = applicationDbContext.Users.Single(user => user.Id == HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            LearningPath learningPath = applicationDbContext.LearningPaths.First(path => path.Id == learningPathId);
+            applicationUser.EnrolledLearningPaths.Add(new LearningPathEnrollment
+            {
+                PillarLevel = 1,
+                LearningRessourceLevel = 1,
+                ApplicationUser = applicationUser,
+                LearningPath = learningPath
             });
             await applicationDbContext.SaveChangesAsync();
             return Ok();

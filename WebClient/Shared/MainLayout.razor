@@ -5,62 +5,32 @@
 @inject HttpClient httpClient
 
 
-<CascadingValue Value="hubConnection" Name="SignalRHubConnection">
-    <div class="page">
-        <div class="NavigationContainer">
-            <nav>
-                <h1>TeamTurtle 🐢</h1>
-                <AuthorizeView>
-                    <NotAuthorized>
-                        <div class="ProfileSection">
-                            <button><a href="authentication/login">Log in</a></button>
-                        </div>
-                    </NotAuthorized>
-                    <Authorized>
-                        <div class="ProfileSection">
-                            <h3>Hello, @context.User.Identity.Name!</h3>
-                            <button @onclick="BeginLogout"><a>Log out</a></button>
-                        </div>
-                    </Authorized>
-                </AuthorizeView>
-            </nav>       
-        </div>
-        <div class="body">
-            @Body
-        </div>
+<div class="page">
+    <div class="NavigationContainer">
+        <nav>
+            <h1>TeamTurtle 🐢</h1>
+            <AuthorizeView>
+                <NotAuthorized>
+                    <div class="ProfileSection">
+                        <button><a href="authentication/login">Log in</a></button>
+                    </div>
+                </NotAuthorized>
+                <Authorized>
+                    <div class="ProfileSection">
+                        <h3>Hello, @context.User.Identity.Name!</h3>
+                        <button @onclick="BeginLogout"><a>Log out</a></button>
+                    </div>
+                </Authorized>
+            </AuthorizeView>
+        </nav>
     </div>
-</CascadingValue>
+    <div class="body">
+        @Body
+    </div>
+</div>
 
 
 @code{
-    [CascadingParameter]
-    public Task<AuthenticationState> AuthState { get; set; }
-
-    private HubConnection hubConnection;
-
-    protected override async Task OnInitializedAsync()
-    {
-        ClaimsPrincipal claimsPrincipal;
-        if ((claimsPrincipal = (await AuthState).User).Identity.IsAuthenticated)
-        {
-            AccessToken token = new AccessToken();
-
-            (await tokenProvider.RequestAccessToken()).TryGetToken(out token);
-
-            if (token is not null)
-            {
-                hubConnection = new HubConnectionBuilder()
-                .WithUrl(Navigation.ToAbsoluteUri("/hub"), options =>
-                {
-                    options.AccessTokenProvider = async () => token.Value;
-                })
-                .Build();
-                await hubConnection.StartAsync();
-                StateHasChanged();
-            }
-        }
-    }
-
     private async Task BeginLogout(MouseEventArgs args)
     {
         await SignOutManager.SetSignOutState();

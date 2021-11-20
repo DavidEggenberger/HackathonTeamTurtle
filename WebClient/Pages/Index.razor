@@ -1,15 +1,39 @@
 ﻿@page "/"
 @inject IHttpClientFactory httpClientFactory
+@inject NavigationManager Navigation
+@inject SignOutSessionStateManager SignOutManager
+@inject IAccessTokenProvider tokenProvider
 
-
+<h2>@hubConnection?.State</h2>
 
 
 @code{
-    [CascadingParameter(Name = "SignalRHubConnection")]
-    public HubConnection HubConnection { get; set; }
+    [CascadingParameter]
+    public Task<AuthenticationState> AuthState { get; set; }
+
+    private HubConnection hubConnection;
 
     protected override async Task OnInitializedAsync()
     {
         await httpClientFactory.CreateClient("UnauthenticatedHttpClient").GetAsync("/api/learningpath");
+        ClaimsPrincipal claimsPrincipal;
+        if ((claimsPrincipal = (await AuthState).User).Identity.IsAuthenticated)
+        {
+            AccessToken token = new AccessToken();
+
+            (await tokenProvider.RequestAccessToken()).TryGetToken(out token);
+
+            if (token is not null)
+            {
+                hubConnection = new HubConnectionBuilder()
+                .WithUrl(Navigation.ToAbsoluteUri("/hub"), options =>
+                {
+                    options.AccessTokenProvider = async () => token.Value;
+                })
+                .Build();
+                await hubConnection.StartAsync();
+                StateHasChanged();
+            }
+        }
     }
 }

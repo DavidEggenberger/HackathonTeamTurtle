@@ -22,7 +22,7 @@ namespace WebAPI.Controller
         [HttpGet]
         public async Task<ActionResult<List<ApplicationUserDTO>>> GetAllActiveUsers()
         {
-            return Ok(applicationDbContext.Users.Where(user => user.IsOnline).Select(user => new ApplicationUserDTO 
+            return Ok(applicationDbContext.Users.Where(user => user.IsOnline && !user.PrivateProfile).Select(user => new ApplicationUserDTO 
             { 
                 IsOnline = user.IsOnline,
                 Motto = user.Motto

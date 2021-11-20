@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace WebAPI.Pages
 {
+    [BindProperties]
     public class ProfileModel : PageModel
     {
         private UserManager<ApplicationUser> userManager;
@@ -22,8 +23,18 @@ namespace WebAPI.Pages
         {
             ApplicationUser applicationUser = await userManager.GetUserAsync(HttpContext.User);
             Motto = applicationUser.Motto;
-            
+            PrivateProfile = applicationUser.PrivateProfile;
         }
-
+        public async Task OnPostAsync()
+        {
+            ApplicationUser applicationUser = await userManager.GetUserAsync(HttpContext.User);
+            applicationUser.Motto = Motto;
+            applicationUser.PrivateProfile = PrivateProfile;
+            await userManager.UpdateAsync(applicationUser);
+        }
+        public ActionResult OnPostAsyncRedirect()
+        {
+            return Redirect("/");
+        }
     }
 }

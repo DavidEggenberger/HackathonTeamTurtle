@@ -189,6 +189,23 @@ namespace WebAPI
                 {
                     ValidAudience = "API"
                 };
+                var originalOnMessageReceived = options.Events.OnMessageReceived;
+                options.Events.OnMessageReceived = async context =>
+                {
+                    await originalOnMessageReceived(context);
+
+                    if (string.IsNullOrEmpty(context.Token))
+                    {
+                        var accessToken = context.Request.Query["access_token"];
+                        var path = context.HttpContext.Request.Path;
+
+                        if (!string.IsNullOrEmpty(accessToken) &&
+                            path.Value.EndsWith("hub"))
+                        {
+                            context.Token = accessToken;
+                        }
+                    }
+                };
             });
         }
 

@@ -1,10 +1,9 @@
 .page {
-    position: relative;
-    display: flex;
-    flex-direction: column;
+    height: 100vh;
+    display: grid;
 }
 
-.main {
-    flex: 1;
+.body {
+    padding: 20px;
 }
 

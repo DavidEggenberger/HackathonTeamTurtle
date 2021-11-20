@@ -2,7 +2,12 @@
 @inject IHttpClientFactory httpClientFactory
 
 
-@code{      
+
+
+@code{
+    [CascadingParameter(Name = "SignalRHubConnection")]
+    public HubConnection HubConnection { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
         await httpClientFactory.CreateClient("UnauthenticatedHttpClient").GetAsync("/api/learningpath");

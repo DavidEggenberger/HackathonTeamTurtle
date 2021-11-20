@@ -6,7 +6,6 @@
 
   <ItemGroup>
     <Folder Include="Persistance\Configuration\" />
-    <Folder Include="Persistance\Migrations\" />
   </ItemGroup>
 
   <ItemGroup>

@@ -9,5 +9,8 @@ namespace Domain
 {
     public class ApplicationUser : IdentityUser
     {
+        public bool IsOnline { get; set; }
+        public string Motto { get; set; }
+        public List<LearningPath> CreatedLearningPaths { get; set; }
     }
 }

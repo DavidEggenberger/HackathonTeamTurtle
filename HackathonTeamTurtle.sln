@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure", "Infrastru
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebAPI", "WebAPI\WebAPI.csproj", "{D47E18EA-74F7-400B-A751-198F6FD5CA07}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DTOs", "DTOs\DTOs.csproj", "{9AF98441-F114-4924-A4EB-C22A23BC4037}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DTOs", "DTOs\DTOs.csproj", "{9AF98441-F114-4924-A4EB-C22A23BC4037}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,0 +1,49 @@
+﻿@page "/CreateNewLearningPath"
+
+<div class="CreateNewLearningPath">
+    <aside>
+        @foreach (var item in learningRessourceDisplays)
+	    {
+		    <section>
+                @item.Description
+            </section>
+	    }
+    </aside>
+    <div>
+
+    </div>
+</div>
+
+@code{
+    private List<LearningRessourceDisplay> learningRessourceDisplays;
+    protected override async Task OnInitializedAsync()
+    {
+        learningRessourceDisplays = new List<LearningRessourceDisplay>
+        {
+            new LearningRessourceDisplay
+            {
+                IconURI = "",
+                Description = "sds",
+                LearningRessourceType = ""
+            },
+            new LearningRessourceDisplay
+            {
+                IconURI = "",
+                Description = "ddddddd",
+                LearningRessourceType = ""
+            },
+            new LearningRessourceDisplay
+            {
+                IconURI = "",
+                Description = "ziizui",
+                LearningRessourceType = ""
+            }
+        };
+    }
+    private class LearningRessourceDisplay
+    {
+        public string IconURI { get; set; }
+        public string Description { get; set; }
+        public string LearningRessourceType { get; set; }
+    }
+}

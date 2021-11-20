@@ -2,3 +2,21 @@
     display: grid;
     grid-template-rows: 50px 1fr;
 }
+.Title{
+    padding-right: 10px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+h3{
+    margin: 0;
+    font-size: 22px;
+}
+button {
+    color: white;
+    cursor: pointer;
+    background: rgba(62,180,137,1);
+    border-radius: 5px;
+
+}

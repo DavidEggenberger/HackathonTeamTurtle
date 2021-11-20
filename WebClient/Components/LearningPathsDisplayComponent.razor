@@ -1,12 +1,20 @@
-﻿<div class="LearningPathDisplayComponent">
-    <div>
+﻿@inject IHttpClientFactory httpClientFactory
+@inject NavigationManager navigationManager
 
+<div class="LearningPathDisplayComponent">
+    <div class="Title">
+        <h3>Explore the Learningpaths</h3>
+        <button @onclick='() => navigationManager.NavigateTo("CreateNewLearningPath")'>Create new LearningPath</button>
     </div>
-    <div>
+    <div class="LearningPathsOverview">
 
     </div>
 </div>
 
-@code {
-
+@code{
+    private List<LearningPathDTO> learningPathDTOs;
+    protected override async Task OnInitializedAsync()
+    {
+        learningPathDTOs = await httpClientFactory.CreateClient("UnauthenticatedHttpClient").GetFromJsonAsync<List<LearningPathDTO>>("api/learningpath");
+    }
 }

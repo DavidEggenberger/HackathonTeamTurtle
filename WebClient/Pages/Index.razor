@@ -29,7 +29,6 @@
 
     protected override async Task OnInitializedAsync()
     {
-        await httpClientFactory.CreateClient("UnauthenticatedHttpClient").GetAsync("/api/learningpath");
         ClaimsPrincipal claimsPrincipal;
         if ((claimsPrincipal = (await AuthState).User).Identity.IsAuthenticated)
         {

@@ -32,11 +32,7 @@ namespace WebAPI.Controller
             {
                 Name = path.Name,
                 Id = path.Id,
-                EstimatedCompletionTime = path.EstimatedCompletionTime,
-                LearningPathPillarDTOs = path.Pillars.Select(pillar => new LearningPathPillarDTO
-                {
-                    Name = pillar.Name
-                }).ToList()
+                EstimatedCompletionTime = path.EstimatedCompletionTime
             }).ToList());
         }
 
@@ -49,15 +45,7 @@ namespace WebAPI.Controller
             {
                 ApplicationUser = applicationUser,
                 Name = learningPathDTO.Name,
-                EstimatedCompletionTime = learningPathDTO.EstimatedCompletionTime,
-                Pillars = learningPathDTO.LearningPathPillarDTOs.Select(pillar => new LearningPathPillar
-                {
-                    Name = pillar.Name,
-                    LearningRessources = pillar.LearningRessourcesDTOs.Select(ressource => new LearningRessource
-                    {
-                        Name = ressource.Name
-                    }).ToList()
-                }).ToList()
+                EstimatedCompletionTime = learningPathDTO.EstimatedCompletionTime
             });
             await applicationDbContext.SaveChangesAsync();
             return Ok();

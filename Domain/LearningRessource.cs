@@ -9,8 +9,8 @@ namespace Domain
     public class LearningRessource
     {
         public Guid Id { get; set; }
-        public Guid LearningPathPillarId { get; set; }
-        public LearningPathPillar LearningPathPillar { get; set; }
+        public Guid LearningPathId { get; set; }
+        public LearningPath LearningPath { get; set; }
         public string Name { get; set; }
     }
 }

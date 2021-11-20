@@ -11,6 +11,8 @@ namespace Domain
         public Guid Id { get; set; }
         public string ApplicationUserId { get; set; }
         public ApplicationUser ApplicationUser { get; set; }
+        public TimeSpan EstimatedCompletionTime { get; set; }
         public string Name { get; set; }
+        public List<LearningPathPillar> Pillars { get; set; }
     }
 }

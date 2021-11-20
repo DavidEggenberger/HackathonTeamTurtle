@@ -1,10 +1,30 @@
 ﻿@inherits LayoutComponentBase
+@inject NavigationManager Navigation
+@inject SignOutSessionStateManager SignOutManager
 
 <div class="page">
     <nav>
-
+        <AuthorizeView>
+            <NotAuthorized>
+                <button><a href="authentication/login">Log in</a></button>
+            </NotAuthorized>
+            <Authorized>
+                <div class="ProfileSection">
+                    <h3>Hello, @context.User.Identity.Name!</h3>
+                    <button class="nav-link btn btn-link" @onclick="BeginLogout"><a>Log out</a></button>
+                </div>
+            </Authorized>
+        </AuthorizeView>
     </nav>
     <div class="body">
         @Body
     </div>
 </div>
+
+@code{
+    private async Task BeginLogout(MouseEventArgs args)
+    {
+        await SignOutManager.SetSignOutState();
+        Navigation.NavigateTo("authentication/logout");
+    }
+}

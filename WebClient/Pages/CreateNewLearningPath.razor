@@ -4,17 +4,27 @@
     <aside>
         @foreach (var item in learningRessourceDisplays)
 	    {
-		    <section>
+		    <section draggable="true" @ondragstart="() => DragStart(item)">
                 @item.Description
             </section>
 	    }
     </aside>
     <div>
-
+        <div class="DiagramContainer" ondragover="event.preventDefault();" dropzone @ondrop="OnDrop">
+            <CascadingValue Value="diagram">
+                <DiagramCanvas></DiagramCanvas>
+            </CascadingValue>
+        </div>
+    </div>
+    <div class="arrow">
+        <h4>Flow of the Learnpath</h4>
+        <img src="/left-arrow.png" />
     </div>
 </div>
 
 @code{
+    private LearningRessourceDisplay draggedLearningRessource;
+    private Diagram diagram;
     private List<LearningRessourceDisplay> learningRessourceDisplays;
     protected override async Task OnInitializedAsync()
     {
@@ -23,14 +33,14 @@
             new LearningRessourceDisplay
             {
                 IconURI = "",
-                Description = "sds",
-                LearningRessourceType = ""
+                Description = "VideoExtern",
+                LearningRessourceType = "VideoExtern"
             },
             new LearningRessourceDisplay
             {
                 IconURI = "",
-                Description = "ddddddd",
-                LearningRessourceType = ""
+                Description = "BlogExtern",
+                LearningRessourceType = "BlogExtern"
             },
             new LearningRessourceDisplay
             {
@@ -39,11 +49,53 @@
                 LearningRessourceType = ""
             }
         };
+        var options = new DiagramOptions
+        {
+            DeleteKey = "Delete",
+            DefaultNodeComponent = null,
+            AllowMultiSelection = true,
+            AllowPanning = false,
+            Zoom = new DiagramZoomOptions
+            {
+                Enabled = false
+            },
+            Links = new DiagramLinkOptions
+            {
+                DefaultColor = "white"
+            }
+        };
+        diagram = new Diagram(options);
+        diagram.RegisterModelComponent<LearningPathStartNode, LearningPathStartComponent>();
+        diagram.RegisterModelComponent<BlogExternNode, BlogExternComponent>();
+        diagram.RegisterModelComponent<VideoExternNode, VideoExternComponent>();
+        StateHasChanged();
+        await Task.Delay(100);
+        diagram.Nodes.Add(new LearningPathStartNode(new Point(diagram.Container.Width / 2 - 120, 30)));
     }
     private class LearningRessourceDisplay
     {
         public string IconURI { get; set; }
         public string Description { get; set; }
         public string LearningRessourceType { get; set; }
+    }
+    public void OnDrop(DragEventArgs e)
+    {
+        var position = diagram.GetRelativeMousePoint(e.ClientX, e.ClientY);
+        Point point = new Point(position.X, position.Y);
+        NodeModel nodeModel = draggedLearningRessource.LearningRessourceType switch
+        {
+            "VideoExtern" => new VideoExternNode(point) {  },
+            "BlogExtern" => new BlogExternNode(point) {  },
+            _ => null
+        };
+        if(nodeModel != null)
+        {
+            diagram.Nodes.Add(nodeModel);
+        }
+        draggedLearningRessource = null;
+    }
+    private void DragStart(LearningRessourceDisplay learningRessource)
+    {
+        draggedLearningRessource = learningRessource;
     }
 }

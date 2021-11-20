@@ -1,0 +1,17 @@
+﻿<div class="card">
+    <div class="card-body">
+        <h4>Add activities that can be done there</h4>
+        <div style="max-height: 160px; overflow-y: scroll;">
+            
+        </div>
+    </div>
+    @foreach (var port in Node.Ports)
+    {
+        <PortRenderer Port="port" />
+    }
+</div>
+
+@code{
+    [Parameter]
+    public BlogExternNode Node { get; set; }
+}

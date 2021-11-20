@@ -1,0 +1,14 @@
+﻿<div class="card">
+    <div class="card-body">
+        <h4>Add activities that can be done there</h4>
+    </div>
+    @foreach (var port in Node.Ports)
+    {
+        <PortRenderer Port="port" />
+    }
+</div>
+
+@code{
+    [Parameter]
+    public VideoExternNode Node { get; set; }
+}

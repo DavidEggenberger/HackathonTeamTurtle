@@ -2,7 +2,7 @@
     height: 100%;
     width: 100%;
     display: grid;
-    grid-template-columns: 160px 1fr;
+    grid-template-columns: 200px 1fr 80px;
 }
 aside{
     padding: 5px;
@@ -21,4 +21,21 @@ section {
     border-radius: 3px;
     background: rgba(62,180,137, 0.2);
     margin-bottom: 10px;
+}
+.DiagramContainer{
+    height: 100%;
+    width: 100%;
+}
+section{
+    cursor: pointer;
+}
+img{
+    transform: rotate(-90deg);
+    height: 100px;
+}
+.arrow{
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }

@@ -1,4 +1,10 @@
 ﻿@page "/"
+@inject IHttpClientFactory httpClientFactory
 
 
-
+@code{      
+    protected override async Task OnInitializedAsync()
+    {
+        await httpClientFactory.CreateClient("UnauthenticatedHttpClient").GetAsync("/api/learningpath");
+    }
+}

@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Persistance.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20211120083522_initial")]
+    [Migration("20211120113419_initial")]
     partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -40,11 +40,17 @@ namespace Infrastructure.Persistance.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("IsOnline")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
 
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Motto")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
@@ -84,6 +90,66 @@ namespace Infrastructure.Persistance.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers");
+                });
+
+            modelBuilder.Entity("Domain.LearningPath", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ApplicationUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<TimeSpan>("EstimatedCompletionTime")
+                        .HasColumnType("time");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId");
+
+                    b.ToTable("LearningPaths");
+                });
+
+            modelBuilder.Entity("Domain.LearningPathPillar", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("LearningPathId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LearningPathId");
+
+                    b.ToTable("LearningPathPillar");
+                });
+
+            modelBuilder.Entity("Domain.LearningRessource", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("LearningPathPillarId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LearningPathPillarId");
+
+                    b.ToTable("LearningRessource");
                 });
 
             modelBuilder.Entity("IdentityServer4.EntityFramework.Entities.DeviceFlowCodes", b =>
@@ -267,10 +333,12 @@ namespace Infrastructure.Persistance.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("ProviderKey")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("nvarchar(max)");
@@ -307,10 +375,12 @@ namespace Infrastructure.Persistance.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("Value")
                         .HasColumnType("nvarchar(max)");
@@ -318,6 +388,37 @@ namespace Infrastructure.Persistance.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
+                });
+
+            modelBuilder.Entity("Domain.LearningPath", b =>
+                {
+                    b.HasOne("Domain.ApplicationUser", "ApplicationUser")
+                        .WithMany("CreatedLearningPaths")
+                        .HasForeignKey("ApplicationUserId");
+
+                    b.Navigation("ApplicationUser");
+                });
+
+            modelBuilder.Entity("Domain.LearningPathPillar", b =>
+                {
+                    b.HasOne("Domain.LearningPath", "LearningPath")
+                        .WithMany("Pillars")
+                        .HasForeignKey("LearningPathId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("LearningPath");
+                });
+
+            modelBuilder.Entity("Domain.LearningRessource", b =>
+                {
+                    b.HasOne("Domain.LearningPathPillar", "LearningPathPillar")
+                        .WithMany("LearningRessources")
+                        .HasForeignKey("LearningPathPillarId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("LearningPathPillar");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -369,6 +470,21 @@ namespace Infrastructure.Persistance.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Domain.ApplicationUser", b =>
+                {
+                    b.Navigation("CreatedLearningPaths");
+                });
+
+            modelBuilder.Entity("Domain.LearningPath", b =>
+                {
+                    b.Navigation("Pillars");
+                });
+
+            modelBuilder.Entity("Domain.LearningPathPillar", b =>
+                {
+                    b.Navigation("LearningRessources");
                 });
 #pragma warning restore 612, 618
         }

@@ -39,6 +39,16 @@ namespace WebAPI
         {
             services.AddRazorPages();
             services.AddSignalR();
+            services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(builder =>
+                {
+                    builder.AllowAnyOrigin()
+                          .AllowAnyMethod()
+                          .AllowAnyHeader()
+                          .Build();
+                });
+            });
 
             services.AddDbContext<ApplicationDbContext>(options =>
             {
@@ -201,6 +211,7 @@ namespace WebAPI
             app.UseStaticFiles();
 
             app.UseRouting();
+            app.UseCors();
 
             app.UseIdentityServer();
             app.UseAuthentication();

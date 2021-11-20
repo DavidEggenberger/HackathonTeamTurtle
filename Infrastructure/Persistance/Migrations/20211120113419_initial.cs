@@ -26,6 +26,8 @@ namespace Infrastructure.Persistance.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    IsOnline = table.Column<bool>(type: "bit", nullable: false),
+                    Motto = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -131,8 +133,8 @@ namespace Infrastructure.Persistance.Migrations
                 name: "AspNetUserLogins",
                 columns: table => new
                 {
-                    LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    ProviderKey = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    LoginProvider = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
+                    ProviderKey = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
                     ProviderDisplayName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
@@ -176,8 +178,8 @@ namespace Infrastructure.Persistance.Migrations
                 columns: table => new
                 {
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    LoginProvider = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
                     Value = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
@@ -187,6 +189,64 @@ namespace Infrastructure.Persistance.Migrations
                         name: "FK_AspNetUserTokens_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "LearningPaths",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ApplicationUserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    EstimatedCompletionTime = table.Column<TimeSpan>(type: "time", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_LearningPaths", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_LearningPaths_AspNetUsers_ApplicationUserId",
+                        column: x => x.ApplicationUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "LearningPathPillar",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    LearningPathId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_LearningPathPillar", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_LearningPathPillar_LearningPaths_LearningPathId",
+                        column: x => x.LearningPathId,
+                        principalTable: "LearningPaths",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "LearningRessource",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    LearningPathPillarId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_LearningRessource", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_LearningRessource_LearningPathPillar_LearningPathPillarId",
+                        column: x => x.LearningPathPillarId,
+                        principalTable: "LearningPathPillar",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -242,6 +302,21 @@ namespace Infrastructure.Persistance.Migrations
                 column: "Expiration");
 
             migrationBuilder.CreateIndex(
+                name: "IX_LearningPathPillar_LearningPathId",
+                table: "LearningPathPillar",
+                column: "LearningPathId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_LearningPaths_ApplicationUserId",
+                table: "LearningPaths",
+                column: "ApplicationUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_LearningRessource_LearningPathPillarId",
+                table: "LearningRessource",
+                column: "LearningPathPillarId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_PersistedGrants_Expiration",
                 table: "PersistedGrants",
                 column: "Expiration");
@@ -278,10 +353,19 @@ namespace Infrastructure.Persistance.Migrations
                 name: "DeviceCodes");
 
             migrationBuilder.DropTable(
+                name: "LearningRessource");
+
+            migrationBuilder.DropTable(
                 name: "PersistedGrants");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "LearningPathPillar");
+
+            migrationBuilder.DropTable(
+                name: "LearningPaths");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

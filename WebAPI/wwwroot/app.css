@@ -8,3 +8,119 @@
 #blazor-error-ui{
     display: none;
 }
+.page {
+    height: 100vh;
+    display: grid;
+    grid-template-rows: 140px 1fr;
+}
+
+.NavigationContainer {
+    height: 100%;
+    width: 100%;
+    display: grid;
+    justify-content: center;
+    align-content: center;
+}
+
+nav {
+    border: 3px solid white;
+    border-radius: 5px;
+    padding: 10px 10px 5px 10px;
+    height: 50px;
+    width: 80vw;
+    background-color: rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(3px);
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    color: rgba(62,180,137,1);
+}
+
+h1 {
+    margin: 0;
+    font-size: 32px;
+}
+
+.body {
+    padding: 20px;
+}
+
+.ProfileSection {
+    padding: 3px;
+    display: flex;
+    align-items: flex-end;
+    min-width: 70px;
+}
+.ProfileSection button{
+    width: 80px;
+    cursor: pointer;
+}
+
+button {
+    background: none;
+    outline: none;
+    border: none;
+    height: 50px;
+}
+
+a {
+    display: block;
+    text-decoration: none;
+    color: white !important;
+    position: absolute;
+    font-size: 24px;
+}
+.titleLink {
+    margin: 0;
+    font-size: 32px;
+    position: relative;
+    color: rgba(62,180,137,1) !important;
+}
+    a::before {
+        position: relative;
+        content: '';
+        bottom: -4px;
+        height: 3px;
+        left: 0;
+        right: 0;
+        color: rgba(62,180,137,1)
+    }
+
+.body {
+    border: 3px solid white;
+    margin: 0 auto 50px auto;
+    border-radius: 5px;
+    padding: 10px 10px 5px 10px;
+    width: 80vw;
+    background-color: rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(3px);
+    color: rgba(62,180,137,1);
+}
+.LoginForm {
+    height: 100%;
+    width: 100%;
+    color: white;
+    display: grid;
+    justify-content: center;
+    align-content: center;
+}
+.LoginForm main{
+    border: 3px solid white;
+    border-radius: 5px;
+    padding: 15px;
+}
+.LoginForm main h3{
+    text-align: center;
+}
+.LoginForm button{
+    height: 40px; 
+    width: 86px; 
+    font-size: 18px;
+    color: white;
+    cursor: pointer;
+    padding: 5px;
+    border: 2px solid white;
+}
+h3{
+    margin: 0;
+}

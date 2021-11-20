@@ -9,14 +9,17 @@
     <div class="page">
         <div class="NavigationContainer">
             <nav>
+                <h1>TeamTurtle 🐢</h1>
                 <AuthorizeView>
                     <NotAuthorized>
-                        <button><a href="authentication/login">Log in</a></button>
+                        <div class="ProfileSection">
+                            <button><a href="authentication/login">Log in</a></button>
+                        </div>
                     </NotAuthorized>
                     <Authorized>
                         <div class="ProfileSection">
                             <h3>Hello, @context.User.Identity.Name!</h3>
-                            <button class="nav-link btn btn-link" @onclick="BeginLogout"><a>Log out</a></button>
+                            <button @onclick="BeginLogout"><a>Log out</a></button>
                         </div>
                     </Authorized>
                 </AuthorizeView>

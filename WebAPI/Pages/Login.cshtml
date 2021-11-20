@@ -5,7 +5,7 @@
 }
 
 @{
-    <div style="height: 100%; display: grid; justify-content: center; align-content: center;">
+    <div class="LoginForm">
         <main>
             <h3>Choose a social log-in:</h3>
             @{
@@ -14,8 +14,7 @@
                     <div>
                         @foreach (var provider in providers)
                         {
-
-                            <button style="height: 24px; width: 86px; font-size: 18px;" class="socialLoginButton" type="submit" value="@provider.Name" name="provider">@provider.Name</button>
+                            <button class="socialLoginButton" type="submit" value="@provider.Name" name="provider">@provider.Name</button>
                         }
                     </div>
                 </form>

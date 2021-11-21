@@ -64,8 +64,8 @@
             new LearningRessourceDisplay
             {
                 IconURI = "",
-                Description = "ziizui",
-                LearningRessourceType = ""
+                Description = "A quiz to test the learnt knowledge",
+                LearningRessourceType = "Quiz"
             }
         };
         var options = new DiagramOptions
@@ -87,6 +87,7 @@
         diagram.RegisterModelComponent<LearningPathStartNode, LearningPathStartComponent>();
         diagram.RegisterModelComponent<BlogExternNode, BlogExternComponent>();
         diagram.RegisterModelComponent<VideoExternNode, VideoExternComponent>();
+        diagram.RegisterModelComponent<QuizNode, QuizRessourceComponent>();
         StateHasChanged();
         await Task.Delay(100);
         diagram.Nodes.Add(new LearningPathStartNode(new Point(diagram.Container.Width / 2 - 120, 30)));
@@ -100,7 +101,8 @@
                     Description = learningRessourceDTO.Description,
                     IsVideo = learningRessourceDTO.IsVideo,
                     LinkURI = learningRessourceDTO.LinkURI,
-                    Name = learningRessourceDTO.Name
+                    Name = learningRessourceDTO.Name,
+                    QuizQuestions = learningRessourceDTO.QuizQuestions
                 });
             };
         };
@@ -119,6 +121,7 @@
         {
             "VideoExtern" => new VideoExternNode(point) { LearningRessourceDTO = new LearningRessourceDTO()  },
             "BlogExtern" => new BlogExternNode(point) { LearningRessourceDTO = new LearningRessourceDTO() },
+            "Quiz" => new QuizNode(point) { LearningRessourceDTO = new LearningRessourceDTO() { QuizQuestions = new List<QuizQuestionDTO>() } },
             _ => null
         };
         if(nodeModel != null)

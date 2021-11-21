@@ -1,0 +1,12 @@
+﻿@page "/LearnPath/{LearnPathId:guid}"
+@inject IHttpClientFactory httpClientFactory 
+
+
+@code {
+    private LearningPathDTO learningPathDTOs;
+    public Guid LearnPathId { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        learningPathDTOs = await httpClientFactory.CreateClient("WebAPI").GetFromJsonAsync<LearningPathDTO>($"api/learningpath/{LearnPathId}");
+    }
+}

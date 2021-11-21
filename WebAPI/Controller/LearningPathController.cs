@@ -30,10 +30,39 @@ namespace WebAPI.Controller
         {
             return Ok(applicationDbContext.LearningPaths.Select(path => new LearningPathDTO
             {
+                Genre = path.Genre,
                 Name = path.Name,
                 Id = path.Id,
-                EstimatedCompletionTimeInHrs = path.EstimatedCompletionTimeInHrs
+                EstimatedCompletionTimeInHrs = path.EstimatedCompletionTimeInHrs,
+                EnrolledUsersCount = path.EnrolledUsers.Count,
+                LearningRessourceDTOs = path.LearningRessources.Select(ressource => new LearningRessourceDTO
+                {
+                    Description = ressource.Description,
+                    IsVideo = ressource.IsVideo,
+                    LinkURI = ressource.URI,
+                    Name = ressource.Name
+                }).ToList()
             }).ToList());
+        }
+
+        [HttpGet("id:guid")]
+        public async Task<ActionResult<LearningPathDTO>> GetAllLearningPathById(Guid id)
+        {
+            return Ok(applicationDbContext.LearningPaths.Where(s => s.Id == id).Select(path => new LearningPathDTO
+            {
+                Genre = path.Genre,
+                Name = path.Name,
+                Id = path.Id,
+                EstimatedCompletionTimeInHrs = path.EstimatedCompletionTimeInHrs,
+                EnrolledUsersCount = path.EnrolledUsers.Count,
+                LearningRessourceDTOs = path.LearningRessources.Select(ressource => new LearningRessourceDTO
+                {
+                    Description = ressource.Description,
+                    IsVideo = ressource.IsVideo,
+                    LinkURI = ressource.URI,
+                    Name = ressource.Name
+                }).ToList()
+            }).First());
         }
 
         [Authorize]
@@ -43,9 +72,18 @@ namespace WebAPI.Controller
             ApplicationUser applicationUser = await userManager.FindByIdAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
             applicationDbContext.LearningPaths.Add(new LearningPath 
             {
+                Genre = learningPathDTO.Genre,
                 ApplicationUser = applicationUser,
                 Name = learningPathDTO.Name,
-                EstimatedCompletionTimeInHrs = learningPathDTO.EstimatedCompletionTimeInHrs
+                EstimatedCompletionTimeInHrs = learningPathDTO.EstimatedCompletionTimeInHrs,
+                LearningRessources = learningPathDTO.LearningRessourceDTOs.Select(ressource => new LearningRessource
+                {
+                    Description = ressource.Description,
+                    IsVideo = ressource.IsVideo,
+                    Name = ressource.Name,
+                    URI = ressource.LinkURI,
+                    QuizQuestions = ressource.QuizQuestions.Select(s => new QuizQuestion { Question = s.Question, CorrectAnswer = s.Answert}).ToList()
+                }).ToList()
             });
             await applicationDbContext.SaveChangesAsync();
             return Ok();
@@ -62,7 +100,7 @@ namespace WebAPI.Controller
                 PillarLevel = 1,
                 LearningRessourceLevel = 1,
                 ApplicationUser = applicationUser,
-                LearningPath = learningPath
+                LearningPath = learningPath,
             });
             await applicationDbContext.SaveChangesAsync();
             return Ok();

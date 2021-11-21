@@ -1,5 +1,32 @@
-﻿<h3>QuizRessourceComponent</h3>
+﻿<style>
+    button{
+        color: white;
+        font-size: 18px;
+        border: 1px solid white;
+        border-radius: 2px;
+    }
+</style>
+<div class="card">
+    <div class="card-body">
+        <h4 style="margin-bottom: 5px; margin-top: 5px;">Add quiz Questions</h4>
+        <label>Question</label>
+        <input @bind="questionDTO.Question"/>
+        <label>Correct Answer</label>
+        <input @bind="questionDTO.Answert"/>
+        <button @onclick="() => { Node.LearningRessourceDTO.QuizQuestions.Add(questionDTO); questionDTO = new QuizQuestionDTO(); }">Add</button>
+    </div>
+    @foreach (var port in Node.Ports)
+    {
+        <PortRenderer Port="port" />
+    }
+</div>
 
-@code {
-
+@code{
+    [Parameter]
+    public QuizNode Node { get; set; }
+    private QuizQuestionDTO questionDTO;
+    protected override async Task OnInitializedAsync()
+    {
+        questionDTO = new QuizQuestionDTO();
+    }
 }

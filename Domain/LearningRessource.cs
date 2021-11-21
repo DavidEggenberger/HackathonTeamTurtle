@@ -15,5 +15,6 @@ namespace Domain
         public bool IsVideo { get; set; }
         public string URI { get; set; }
         public string Description { get; set; }
+        public List<QuizQuestion> QuizQuestions { get; set; }
     }
 }

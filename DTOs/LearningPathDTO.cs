@@ -10,6 +10,7 @@ namespace DTOs
         public string Name { get; set; }
         public int EstimatedCompletionTimeInHrs { get; set; }
         public int EnrolledUsersCount { get; set; }
+        public string Genre { get; set; }
         public List<LearningRessourceDTO> LearningRessourceDTOs { get; set; }
     }
 }

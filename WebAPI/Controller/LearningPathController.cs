@@ -82,6 +82,13 @@ namespace WebAPI.Controller
                 Genre = learningPathDTO.Genre,
                 ApplicationUser = applicationUser,
                 Name = learningPathDTO.Name,
+                EnrolledUsers = new List<LearningPathEnrollment>
+                {
+                    new LearningPathEnrollment
+                    {
+                        ApplicationUser = applicationUser
+                    }
+                },
                 EstimatedCompletionTimeInHrs = learningPathDTO.EstimatedCompletionTimeInHrs,
                 LearningRessources = learningPathDTO.LearningRessourceDTOs.Select(ressource => new LearningRessource
                 {

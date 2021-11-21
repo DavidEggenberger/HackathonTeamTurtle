@@ -24,6 +24,12 @@
                 }
             }
         </div>
+        <div class="LearningSection">
+            @if (learningPathDTO != null)
+            {
+                <LearningRessourceComponent LearningPathDTO="learningPathDTO"/>
+            }
+        </div>
     </div>
     <div class="ChatSection">
         <h3>Ask questions, empower others!</h3>

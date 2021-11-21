@@ -1,0 +1,25 @@
+﻿.LearningRessourceComponent {
+    height: 100%;
+    width: 70%;
+}
+.LearningRessource {
+    border: 2px solid white;
+    border-top: none;
+    height: auto;
+    background-color: rgba(62,180,137,0.3);
+}
+.Header{
+    height: 30px;
+    display: flex;
+    justify-content: space-between;
+}
+.LearningRessource:first-of-type {
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+    border-top: 2px solid white;
+}
+img{
+    height: 30px;
+    margin-right: 5px;
+    cursor: pointer;
+}

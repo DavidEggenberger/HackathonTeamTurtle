@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="wwwroot\down-arrow.png" />
     <None Include="wwwroot\favicon.ico" />
   </ItemGroup>
 

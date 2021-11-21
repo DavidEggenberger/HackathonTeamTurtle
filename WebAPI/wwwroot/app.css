@@ -3,6 +3,7 @@
     margin: 0;
     font-family: Arial, Helvetica, sans-serif;
     color: white;
+    overflow: hidden;
     background: linear-gradient(180deg, rgba(140,219,227,1) 0%, rgba(62,180,137,1) 100%);
 }
 #blazor-error-ui{

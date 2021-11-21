@@ -39,6 +39,10 @@
             <div class="messages">
                 @if (messages != null)
                 {
+                    @foreach (var item in users)
+                    {
+                        <p>@item.UserName</p>
+                    }
                     @foreach (var item in messages)
                     {
                         <div class="message">
@@ -80,13 +84,16 @@
     private LearningPathDTO learningPathDTO;
     [Parameter]
     public Guid LearnPathId { get; set; }
+    private List<ApplicationUserDTO> users;
     protected override async Task OnInitializedAsync()
     {
+        users = new List<ApplicationUserDTO>();
         messages = new List<MessageDTO>();
         if (Index.hubConnection?.State == HubConnectionState.Connected)
         {
             learningPathDTO = await httpClientFactory.CreateClient("WebAPI").GetFromJsonAsync<LearningPathDTO>($"/api/learningpath/{LearnPathId}");
             Index.hubConnection.On("Update", GetMessages);
+            await Index.hubConnection.InvokeAsync("Learn", new MessageDTO { LearningPathId = LearnPathId });
             await GetMessages();
         }
         else
@@ -107,12 +114,13 @@
     public async Task GetMessages()
     {
         messages = await httpClientFactory.CreateClient("UnauthenticatedHttpClient").GetFromJsonAsync<List<MessageDTO>>($"/api/learningpath/messages/{LearnPathId}");
+        users = await httpClientFactory.CreateClient("UnauthenticatedHttpClient").GetFromJsonAsync<List<ApplicationUserDTO>>($"/api/applicationuser/{LearnPathId}");
         StateHasChanged();
     }
     public async Task Chat()
     {
-        await Index.hubConnection.InvokeAsync("Chat", new MessageDTO 
-        { 
+        await Index.hubConnection.InvokeAsync("Chat", new MessageDTO
+        {
             Message = message,
             LearningPathId = LearnPathId,
             SenderId = Index.id

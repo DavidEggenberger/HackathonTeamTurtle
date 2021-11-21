@@ -28,7 +28,6 @@ namespace WebAPI.Hubs
             {
                 appUser.IsOnline = true;
                 appUser.TabsOpen = 1;
-                
                 await applicationDbContext.SaveChangesAsync();
                 await Clients.All.SendAsync("Update");
                 return;
@@ -53,6 +52,13 @@ namespace WebAPI.Hubs
                 await applicationDbContext.SaveChangesAsync();
                 await Clients.All.SendAsync("Update");
             }
+        }
+        public async Task Learn(MessageDTO dto)
+        {
+            ApplicationUser appUser = applicationDbContext.Users.Include(s => s.SentLearningPathMessages).Where(s => s.Id == Context.User.FindFirst("sub").Value).First();
+            appUser.CurrentlyLearningId = dto.LearningPathId;
+            await applicationDbContext.SaveChangesAsync();
+            await Clients.All.SendAsync("Update");
         }
         public async Task Chat(MessageDTO messageDTO)
         {

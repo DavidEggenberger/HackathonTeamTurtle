@@ -9,7 +9,7 @@ namespace Domain
 {
     public class ApplicationUser : IdentityUser
     {
-        public LearningPath CurrentlyLearning { get; set; }
+        public Guid CurrentlyLearningId { get; set; }
         public int TabsOpen { get; set; }
         public bool PrivateProfile { get; set; }
         public bool IsOnline { get; set; }

@@ -28,5 +28,16 @@ namespace WebAPI.Controller
                 Motto = user.Motto
             }));
         }
+
+        [HttpGet("{id:guid}")]
+        public async Task<ActionResult<List<ApplicationUserDTO>>> GetAllActiveUsersPerLearningPath(Guid id)
+        {
+            return Ok(applicationDbContext.Users.Where(user => user.IsOnline && !user.PrivateProfile && user.CurrentlyLearningId == id).Select(user => new ApplicationUserDTO
+            {
+                UserName = user.UserName,
+                IsOnline = user.IsOnline,
+                Motto = user.Motto
+            }));
+        }
     }
 }

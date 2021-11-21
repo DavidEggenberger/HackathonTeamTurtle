@@ -1,3 +1,5 @@
+using Azure;
+using Azure.AI.TextAnalytics;
 using Domain;
 using IdentityServer4.Models;
 using Infrastructure.Persistance;
@@ -49,6 +51,7 @@ namespace WebAPI
                           .Build();
                 });
             });
+            services.AddScoped<TextAnalyticsClient>(sp => new TextAnalyticsClient(new Uri(Configuration["AzureKeyVaultCognitiveServicesSEndpoint"]), new AzureKeyCredential(Configuration["AzureKeyVaultCognitiveServicesKey"])));
 
             services.AddDbContext<ApplicationDbContext>(options =>
             {

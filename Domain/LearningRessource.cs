@@ -12,5 +12,8 @@ namespace Domain
         public Guid LearningPathId { get; set; }
         public LearningPath LearningPath { get; set; }
         public string Name { get; set; }
+        public bool IsVideo { get; set; }
+        public string URI { get; set; }
+        public string Description { get; set; }
     }
 }

@@ -1,7 +1,10 @@
-﻿<div class="card">
+﻿@inject IHttpClientFactory httpClientFactory
+
+<div class="card">
     <div class="card-body">
-        <h4 style="margin-bottom: 5px; margin-top: 5px;">Add a link to an external Blog</h4>
-        
+        <h4 style="margin-bottom: 5px; margin-top: 5px;">Add a link to an external Blog @Node.LearningRessourceDTO.LinkURI</h4>
+        <input @bind="Node.LearningRessourceDTO.LinkURI" @bind:event="oninput"/>
+        <button @onclick="async() => await Save()">Save</button>
     </div>
     @foreach (var port in Node.Ports)
     {
@@ -12,4 +15,12 @@
 @code{
     [Parameter]
     public BlogExternNode Node { get; set; }
+    private bool analyzing;
+    public async Task Save()
+    {
+        analyzing = true;
+        await httpClientFactory.CreateClient("UnauthenticatedHttpClient").PostAsJsonAsync("api/TextAnalysis", new { WebPageUri = Node.LearningRessourceDTO.LinkURI });
+        analyzing = false;
+        StateHasChanged();
+    }
 }

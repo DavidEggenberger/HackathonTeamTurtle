@@ -14,7 +14,7 @@
     {
         <div class="LearningRessource">
             <div class="Header" style="padding: 3px;">
-                <h3>@item.RessourceDTO.Description</h3>
+                <h3>@item.RessourceDTO.Name</h3>
                 <div @onclick="() => item.Expanded = !item.Expanded">
                     @if (item.Expanded)
                     {
@@ -29,7 +29,7 @@
             @if (item.Expanded)
             {
                 <div class="expandable">
-                    <button @onclick='() => navigationManager.NavigateTo(item.RessourceDTO.LinkURI, true)'>Visit LearningRessource</button>
+                    <a style="text-decoration: none !important; display: block; color: white !important;" href="@item.RessourceDTO.LinkURI" target="_blank">Visit LearningRessource</a>
                 </div>
             }
         </div>

@@ -182,7 +182,7 @@ namespace WebAPI
                             Scopes = new List<string> {"API"}
                         }
                     };
-                    var cert = options.SigningCredential = new SigningCredentials(new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Configuration["SigningKey"])), SecurityAlgorithms.HmacSha256);
+                    var cert = options.SigningCredential = new SigningCredentials(new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Configuration["AzureKeyVaultSecretKey"])), SecurityAlgorithms.HmacSha256);
                 });
             }
             #endregion

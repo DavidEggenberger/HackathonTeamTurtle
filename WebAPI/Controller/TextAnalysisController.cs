@@ -36,10 +36,12 @@ namespace WebAPI.Controller
 
             AnalyzeActionsOperation operation = await TextAnalyticsClient.StartAnalyzeActionsAsync(batchInput, actions);
             await operation.WaitForCompletionAsync();
+            Response respone = new Response();
             await foreach (AnalyzeActionsResult documentsInPage in operation.Value)
             {
+                respone.Description = string.Join(", ", documentsInPage.ExtractKeyPhrasesResults.First().DocumentsResults.First().KeyPhrases);
             }
-            return Ok();
+            return Ok(respone);
         }
 
         public class TextDTO

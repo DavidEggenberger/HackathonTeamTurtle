@@ -1,6 +1,7 @@
 ﻿@page "/LearnPath/{LearnPathId:guid}"
 @inject IHttpClientFactory httpClientFactory
 @inject NavigationManager navigation
+@inject IAccessTokenProvider tokenProvider
 
 <div class="LearnPathContainer">
     <div class="LearnPathSection">
@@ -59,7 +60,7 @@
                             <button @onclick="async() => await EnrollInLearningPath()">Enroll to chat</button>
                         </Authorized>
                         <NotAuthorized>
-                            <input @bind="message"/>
+                            <input @bind="message" />
                             <button @onclick='() => navigation.NavigateTo("/authentication/login")'>Login to Enroll and Chat</button>
                         </NotAuthorized>
                     </AuthorizeView>
@@ -68,7 +69,7 @@
             else
             {
                 <div class="chatButton" style="display: grid; justify-content: center; align-content: center;">
-                    <input @bind="message"/>
+                    <input @bind="message" />
                     <button style="margin-top: 5px;" @onclick='Chat'>Send Message</button>
                 </div>
             }
@@ -77,6 +78,12 @@
 </div>
 
 @code{
+
+    [CascadingParameter]
+    public Task<AuthenticationState> AuthState { get; set; }
+    public HubConnection hubConnection;
+    public string id { get; set; }
+
     string message = string.Empty;
     private List<MessageDTO> messages;
     [CascadingParameter]
@@ -89,12 +96,29 @@
     {
         users = new List<ApplicationUserDTO>();
         messages = new List<MessageDTO>();
-        if (Index.hubConnection?.State == HubConnectionState.Connected)
+        ClaimsPrincipal claimsPrincipal;
+        if ((claimsPrincipal = (await AuthState).User).Identity.IsAuthenticated)
         {
-            learningPathDTO = await httpClientFactory.CreateClient("WebAPI").GetFromJsonAsync<LearningPathDTO>($"/api/learningpath/{LearnPathId}");
-            Index.hubConnection.On("Update", GetMessages);
-            await Index.hubConnection.InvokeAsync("Learn", new MessageDTO { LearningPathId = LearnPathId });
-            await GetMessages();
+            id = claimsPrincipal.Claims.First(sb => sb.Type == "sub").Value;
+            AccessToken token = new AccessToken();
+
+            (await tokenProvider.RequestAccessToken()).TryGetToken(out token);
+
+            if (token is not null)
+            {
+                hubConnection = new HubConnectionBuilder()
+                .WithUrl(navigation.ToAbsoluteUri("/hub"), options =>
+                {
+                    options.AccessTokenProvider = async () => token.Value;
+                })
+                .Build();
+                await hubConnection.StartAsync();
+                StateHasChanged();
+                learningPathDTO = await httpClientFactory.CreateClient("WebAPI").GetFromJsonAsync<LearningPathDTO>($"/api/learningpath/{LearnPathId}");
+                hubConnection.On("Update", GetMessages);
+                await hubConnection.InvokeAsync("Learn", new MessageDTO { LearningPathId = LearnPathId });
+                await GetMessages();
+            }
         }
         else
         {
@@ -124,7 +148,7 @@
         {
             Message = message,
             LearningPathId = LearnPathId,
-            SenderId = Index.id
+            SenderId = id
         });
         message = string.Empty;
     }

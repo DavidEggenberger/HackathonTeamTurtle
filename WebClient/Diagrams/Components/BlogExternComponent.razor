@@ -64,8 +64,8 @@
         <EditForm Model="Node.LearningRessourceDTO">
             <DataAnnotationsValidator />
             <label>Description:</label>
-            <ValidationMessage For="() => Node.LearningRessourceDTO.Description" />
-            <InputTextOnInput @bind-Value="Node.LearningRessourceDTO.Description" />
+            <ValidationMessage For="() => Node.LearningRessourceDTO.Name" />
+            <InputTextOnInput @bind-Value="Node.LearningRessourceDTO.Name" />
             <label style="display: block;">Link to Blog:</label>
             <ValidationMessage For="() => Node.LearningRessourceDTO.LinkURI" />
             <InputTextOnInput @bind-Value="Node.LearningRessourceDTO.LinkURI" />
@@ -92,11 +92,14 @@
     [Parameter]
     public BlogExternNode Node { get; set; }
     private bool analyzing;
+    string result;
     public async Task Save()
     {
         analyzing = true;
-        await httpClientFactory.CreateClient("UnauthenticatedHttpClient").PostAsJsonAsync("api/TextAnalysis", new { WebPageUri = Node.LearningRessourceDTO.LinkURI });
+        var t = await httpClientFactory.CreateClient("UnauthenticatedHttpClient").PostAsJsonAsync("api/TextAnalysis", new { WebPageUri = Node.LearningRessourceDTO.LinkURI });
         analyzing = false;
+        result = await t.Content.ReadAsStringAsync();
+        Node.LearningRessourceDTO.Description = result;
         StateHasChanged();
     }
 }

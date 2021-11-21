@@ -141,6 +141,7 @@ namespace WebAPI.Controller
             LearningPath learningPath = applicationDbContext.LearningPaths.First(path => path.Id == learningPathId);
             LearningPathEnrollment lp = applicationUser.EnrolledLearningPaths.Where(s => s.LearningPathId == learningPath.Id).First();
             applicationUser.EnrolledLearningPaths.Remove(lp);
+            applicationUser.CurrentlyLearningId = Guid.NewGuid();
             await applicationDbContext.SaveChangesAsync();
             return Ok();
         }

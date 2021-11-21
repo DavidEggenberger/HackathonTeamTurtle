@@ -3,15 +3,23 @@
     {
         <div class="LearningRessource">
             <div class="Header">
-                <h3>@item.RessourceDTO.Description</h3>
+                <h3>@item.RessourceDTO.Name</h3>
                 <div @onclick="() => item.Expanded = !item.Expanded">
-                    <img src="/down-arrow.png"/>
+                    @if (item.Expanded)
+                    {
+                        <img style="transform: rotate(180deg);" src="/down-arrow.png" />
+                    }
+                    else
+                    {
+                        <img src="/down-arrow.png" />
+                    }
                 </div>
             </div>
             @if (item.Expanded)
             {
-                <div style="height: 60px;">
-
+                <div>
+                    <h4>@item.RessourceDTO.Description</h4>
+                    <a href="@item.RessourceDTO.LinkURI">Visit LearningRessource</a>
                 </div>
             }
         </div>

@@ -4,7 +4,7 @@
  
 <div class="LearnPathContainer">
     <div class="LearnPathSection">
-        <div class="header">
+        <div class="header" style="display: flex; justify-content: space-between; width: 75%;">
             @if (learningPathDTO != null)
             {
                 if (learningPathDTO.RetrievingUserEnrolled)
@@ -18,11 +18,12 @@
                             <button @onclick="async() => await EnrollInLearningPath()">Enroll in LearningPath</button>
                         </Authorized>
                         <NotAuthorized>
-                            <button @onclick='() => navigation.NavigateTo("/authnetication/login", true)'>Login to Enroll in LearningPath</button>
+                            <button @onclick='() => navigation.NavigateTo("/authnetication/login")'>Login to Enroll in LearningPath</button>
                         </NotAuthorized>
                     </AuthorizeView>
                 }
             }
+            <button @onclick='() => navigation.NavigateTo("/")'>Back to Overview</button>
         </div>
         <div class="LearningSection">
             @if (learningPathDTO != null)

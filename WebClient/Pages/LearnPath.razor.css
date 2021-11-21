@@ -29,9 +29,9 @@ header{
     display: flex;
     justify-content: space-between;
 }
-button{
+button {
     font-size: 18px;
-    color: white;
+    color: rgba(62,180,137,1);
     border: 2px solid white;
     border-radius: 3px;
     padding: 3px;

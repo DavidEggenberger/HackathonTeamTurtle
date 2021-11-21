@@ -1,10 +1,21 @@
-﻿<div class="card">
+﻿<style>
+    ul, li{
+        margin-top: 3px;
+        font-size: 6px;
+    }
+</style>
+<div class="card">
     <div class="card-body">
         <h4 style="margin-bottom: 5px; margin-top: 5px;">Create a new LearningPath!</h4>
-        <label>Name:</label>
-        <input @bind="configuredLearningPath.Name" />
-        <label>Estimated Timespan in hrs:</label>
-        <input @bind="configuredLearningPath.EstimatedCompletionTimeInHrs" type="number" />
+        <EditForm Model="configuredLearningPath">
+            <DataAnnotationsValidator />
+            <label>Name:</label>
+            <ValidationMessage For="() => configuredLearningPath.Name" />
+            <InputTextOnInput @bind-Value="configuredLearningPath.Name" />
+            <label>Estimated Timespan in hrs:</label>
+            <ValidationMessage For="() => configuredLearningPath.EstimatedCompletionTimeInHrs" />
+            <InputNumber @bind-Value="configuredLearningPath.EstimatedCompletionTimeInHrs" />
+        </EditForm>     
     </div>
     @foreach (var port in Node.Ports)
     {

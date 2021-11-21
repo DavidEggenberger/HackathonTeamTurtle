@@ -72,6 +72,19 @@ namespace WebAPI.Controller
             }).First());
         }
 
+        [HttpGet("messages/{id:guid}")]
+        public async Task<ActionResult<LearningPathDTO>> GetMessagesForLearningPathById(Guid id)
+        {
+            return Ok(applicationDbContext.LearningPaths.Include(s => s.Messages).ThenInclude(s => s.ApplicationUser)
+                .Where(s => s.Id == id)
+                .SelectMany(s => s.Messages)
+                .Select(message => new MessageDTO
+            {
+                UserName = message.ApplicationUser.UserName,
+                Message = message.Message
+            }));
+        }
+
         [Authorize]
         [HttpPost]
         public async Task<ActionResult> CreateLearningPath(LearningPathDTO learningPathDTO)

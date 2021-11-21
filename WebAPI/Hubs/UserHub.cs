@@ -1,7 +1,9 @@
 ﻿using Domain;
+using DTOs;
 using Infrastructure.Persistance;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,6 +28,7 @@ namespace WebAPI.Hubs
             {
                 appUser.IsOnline = true;
                 appUser.TabsOpen = 1;
+                
                 await applicationDbContext.SaveChangesAsync();
                 await Clients.All.SendAsync("Update");
                 return;
@@ -50,6 +53,20 @@ namespace WebAPI.Hubs
                 await applicationDbContext.SaveChangesAsync();
                 await Clients.All.SendAsync("Update");
             }
+        }
+        public async Task Chat(MessageDTO messageDTO)
+        {
+            ApplicationUser appUser = applicationDbContext.Users.Include(s => s.SentLearningPathMessages).Where(s => s.Id == Context.User.FindFirst("sub").Value).First();
+            if(appUser.Id == messageDTO.SenderId)
+            {
+                appUser.SentLearningPathMessages.Add(new LearningPathMessage
+                {
+                    Message = messageDTO.Message,
+                    LearningPathId = messageDTO.LearningPathId
+                });
+            }
+            await applicationDbContext.SaveChangesAsync();
+            await Clients.All.SendAsync("Update");
         }
     }
 }

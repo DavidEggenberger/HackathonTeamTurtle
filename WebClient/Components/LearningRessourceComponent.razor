@@ -3,7 +3,7 @@
     {
         <div class="LearningRessource">
             <div class="Header">
-                <h3>@item.RessourceDTO.Name</h3>
+                <h3>@item.RessourceDTO.Description</h3>
                 <div @onclick="() => item.Expanded = !item.Expanded">
                     @if (item.Expanded)
                     {
@@ -17,8 +17,8 @@
             </div>
             @if (item.Expanded)
             {
-                <div>
-                    <h4>@item.RessourceDTO.Description</h4>
+                <div class="expandable">
+                    <h4 style="margin: 0;">@item.RessourceDTO.Description</h4>
                     <a href="@item.RessourceDTO.LinkURI">Visit LearningRessource</a>
                 </div>
             }

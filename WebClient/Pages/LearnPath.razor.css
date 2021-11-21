@@ -45,3 +45,16 @@ button {
     box-sizing: border-box;
     padding-top: 15px;
 }
+.Chat {
+    height: 100%;
+    box-sizing: border-box;
+    padding: 5px;
+    display: flex;
+    flex-direction: column;
+}
+.messages{
+    height: 75%;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}

@@ -23,3 +23,8 @@ img{
     margin-right: 5px;
     cursor: pointer;
 }
+.expandable{
+    padding: 5px;
+    height: 160px;
+    width: 100%;
+}

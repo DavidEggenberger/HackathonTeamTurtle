@@ -26,12 +26,14 @@
     public Task<AuthenticationState> AuthState { get; set; }
 
     public static HubConnection hubConnection;
+    public static string id;
 
     protected override async Task OnInitializedAsync()
     {
         ClaimsPrincipal claimsPrincipal;
         if ((claimsPrincipal = (await AuthState).User).Identity.IsAuthenticated)
         {
+            id = claimsPrincipal.Claims.First(sb => sb.Type == "sub").Value;
             AccessToken token = new AccessToken();
 
             (await tokenProvider.RequestAccessToken()).TryGetToken(out token);

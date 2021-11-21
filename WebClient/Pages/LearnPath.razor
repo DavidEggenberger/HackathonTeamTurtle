@@ -1,7 +1,7 @@
 ﻿@page "/LearnPath/{LearnPathId:guid}"
-@inject IHttpClientFactory httpClientFactory 
+@inject IHttpClientFactory httpClientFactory
 @inject NavigationManager navigation
- 
+
 <div class="LearnPathContainer">
     <div class="LearnPathSection">
         <div class="header" style="display: flex; justify-content: space-between; width: 75%;">
@@ -26,21 +26,55 @@
             <button @onclick='() => navigation.NavigateTo("/")'>Back to Overview</button>
         </div>
         <div class="LearningSection">
+            <h2>@learningPathDTO?.Name</h2>
             @if (learningPathDTO != null)
             {
-                <LearningRessourceComponent LearningPathDTO="learningPathDTO"/>
+                <LearningRessourceComponent LearningPathDTO="learningPathDTO" />
             }
         </div>
     </div>
     <div class="ChatSection">
         <h3>Ask questions, empower others!</h3>
         <div class="Chat">
-
+            <div class="messages">
+                @if (messages != null)
+                {
+                    @foreach (var item in messages)
+                    {
+                        <div class="message">
+                            @item.Message
+                        </div>
+                    }
+                }
+            </div>
+            @if (learningPathDTO != null && !learningPathDTO.RetrievingUserEnrolled)
+            {
+                <div style="justify-content: space-between;">
+                    <AuthorizeView>
+                        <Authorized>
+                            <button @onclick="async() => await EnrollInLearningPath()">Enroll to chat</button>
+                        </Authorized>
+                        <NotAuthorized>
+                            <input @bind="message"/>
+                            <button @onclick='() => navigation.NavigateTo("/authentication/login")'>Login to Enroll</button>
+                        </NotAuthorized>
+                    </AuthorizeView>
+                </div>
+            }
+            else
+            {
+                <div class="chatButton">
+                    <input @bind="message"/>
+                    <button @onclick='Chat'>Send Message</button>
+                </div>
+            }
         </div>
     </div>
 </div>
 
 @code{
+    string message = string.Empty;
+    private List<MessageDTO> messages;
     [CascadingParameter]
     public HubConnection HubConnection { get; set; }
     private LearningPathDTO learningPathDTO;
@@ -48,9 +82,12 @@
     public Guid LearnPathId { get; set; }
     protected override async Task OnInitializedAsync()
     {
-        if(Index.hubConnection?.State == HubConnectionState.Connected)
+        messages = new List<MessageDTO>();
+        if (Index.hubConnection?.State == HubConnectionState.Connected)
         {
             learningPathDTO = await httpClientFactory.CreateClient("WebAPI").GetFromJsonAsync<LearningPathDTO>($"/api/learningpath/{LearnPathId}");
+            Index.hubConnection.On("Update", GetMessages);
+            await GetMessages();
         }
         else
         {
@@ -66,5 +103,20 @@
     {
         await httpClientFactory.CreateClient("WebAPI").PostAsync($"/api/learningpath/unenroll/{LearnPathId}", new StringContent(string.Empty));
         learningPathDTO = await httpClientFactory.CreateClient("WebAPI").GetFromJsonAsync<LearningPathDTO>($"/api/learningpath/{LearnPathId}");
+    }
+    public async Task GetMessages()
+    {
+        messages = await httpClientFactory.CreateClient("UnauthenticatedHttpClient").GetFromJsonAsync<List<MessageDTO>>($"/api/learningpath/messages/{LearnPathId}");
+        StateHasChanged();
+    }
+    public async Task Chat()
+    {
+        await Index.hubConnection.InvokeAsync("Chat", new MessageDTO 
+        { 
+            Message = message,
+            LearningPathId = LearnPathId,
+            SenderId = Index.id
+        });
+        message = string.Empty;
     }
 }

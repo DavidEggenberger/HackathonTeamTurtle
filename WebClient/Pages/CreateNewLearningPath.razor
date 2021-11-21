@@ -1,4 +1,6 @@
 ﻿@page "/CreateNewLearningPath"
+@inject IHttpClientFactory httpClientFactory
+@inject NavigationManager navigationManager
 
 <div class="CreateNewLearningPath">
     <aside>
@@ -9,11 +11,23 @@
             </section>
 	    }
     </aside>
-    <div>
+    <div style="height: 100%; width: 100%;">
         <div class="DiagramContainer" ondragover="event.preventDefault();" dropzone @ondrop="OnDrop">
-            <CascadingValue Value="diagram">
-                <DiagramCanvas></DiagramCanvas>
-            </CascadingValue>
+            <CascadingValue Value="configuredLearningPath">
+                <CascadingValue Value="diagram">
+                    <DiagramCanvas></DiagramCanvas>
+                </CascadingValue>
+            </CascadingValue>      
+            <div style="height: 10%; display: grid; place-content: center;">
+                <AuthorizeView>
+                    <Authorized>
+                        <button @onclick="async() => await PostLearningPath()">Create LearningPath!</button>
+                    </Authorized>
+                    <NotAuthorized>
+                        <button @onclick='() => navigationManager.NavigateTo("authentication/login", true)'>Login to Create LearningPath!</button>
+                    </NotAuthorized>
+                </AuthorizeView>
+            </div>
         </div>
     </div>
     <div class="arrow">
@@ -23,23 +37,28 @@
 </div>
 
 @code{
+    public LearningPathDTO configuredLearningPath;
     private LearningRessourceDisplay draggedLearningRessource;
     private Diagram diagram;
     private List<LearningRessourceDisplay> learningRessourceDisplays;
     protected override async Task OnInitializedAsync()
     {
+        configuredLearningPath = new LearningPathDTO
+        {
+            LearningRessourceDTOs = new List<LearningRessourceDTO>()
+        };
         learningRessourceDisplays = new List<LearningRessourceDisplay>
         {
             new LearningRessourceDisplay
             {
                 IconURI = "",
-                Description = "VideoExtern",
+                Description = "Link to an external video (For example Youtube)",
                 LearningRessourceType = "VideoExtern"
             },
             new LearningRessourceDisplay
             {
                 IconURI = "",
-                Description = "BlogExtern",
+                Description = "Linkt to an external Blog article",
                 LearningRessourceType = "BlogExtern"
             },
             new LearningRessourceDisplay
@@ -71,6 +90,20 @@
         StateHasChanged();
         await Task.Delay(100);
         diagram.Nodes.Add(new LearningPathStartNode(new Point(diagram.Container.Width / 2 - 120, 30)));
+        diagram.Links.Added += b =>
+        {
+            b.TargetPortChanged += (bt, old, niw) =>
+            {
+                LearningRessourceDTO learningRessourceDTO = ((LearningRessourceNodeModel)bt.TargetPort.Parent).LearningRessourceDTO;
+                configuredLearningPath.LearningRessourceDTOs.Add(new LearningRessourceDTO
+                {
+                    Description = learningRessourceDTO.Description,
+                    IsVideo = learningRessourceDTO.IsVideo,
+                    LinkURI = learningRessourceDTO.LinkURI,
+                    Name = learningRessourceDTO.Name
+                });
+            };
+        };
     }
     private class LearningRessourceDisplay
     {
@@ -84,8 +117,8 @@
         Point point = new Point(position.X, position.Y);
         NodeModel nodeModel = draggedLearningRessource.LearningRessourceType switch
         {
-            "VideoExtern" => new VideoExternNode(point) {  },
-            "BlogExtern" => new BlogExternNode(point) {  },
+            "VideoExtern" => new VideoExternNode(point) { LearningRessourceDTO = new LearningRessourceDTO()  },
+            "BlogExtern" => new BlogExternNode(point) { LearningRessourceDTO = new LearningRessourceDTO() },
             _ => null
         };
         if(nodeModel != null)
@@ -97,5 +130,9 @@
     private void DragStart(LearningRessourceDisplay learningRessource)
     {
         draggedLearningRessource = learningRessource;
+    }
+    public async Task PostLearningPath()
+    {
+        await httpClientFactory.CreateClient("WebAPI").PostAsJsonAsync<LearningPathDTO>("api/learningpath", configuredLearningPath);
     }
 }

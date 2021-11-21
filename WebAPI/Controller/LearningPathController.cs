@@ -32,7 +32,7 @@ namespace WebAPI.Controller
             {
                 Name = path.Name,
                 Id = path.Id,
-                EstimatedCompletionTime = path.EstimatedCompletionTime
+                EstimatedCompletionTimeInHrs = path.EstimatedCompletionTimeInHrs
             }).ToList());
         }
 
@@ -45,7 +45,7 @@ namespace WebAPI.Controller
             {
                 ApplicationUser = applicationUser,
                 Name = learningPathDTO.Name,
-                EstimatedCompletionTime = learningPathDTO.EstimatedCompletionTime
+                EstimatedCompletionTimeInHrs = learningPathDTO.EstimatedCompletionTimeInHrs
             });
             await applicationDbContext.SaveChangesAsync();
             return Ok();

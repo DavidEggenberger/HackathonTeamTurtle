@@ -1,10 +1,10 @@
 ﻿<div class="card">
     <div class="card-body">
-        <h4>Add activities that can be done there</h4>
-        <div style="max-height: 160px; overflow-y: scroll;">
-            
-            
-        </div>
+        <h4 style="margin-bottom: 5px; margin-top: 5px;">Create a new LearningPath!</h4>
+        <label>Name:</label>
+        <input @bind="configuredLearningPath.Name" />
+        <label>Estimated Timespan in hrs:</label>
+        <input @bind="configuredLearningPath.EstimatedCompletionTimeInHrs" type="number" />
     </div>
     @foreach (var port in Node.Ports)
     {
@@ -13,6 +13,8 @@
 </div>
 
 @code{
+    [CascadingParameter]
+    public LearningPathDTO configuredLearningPath { get; set; }
     [Parameter]
     public LearningPathStartNode Node { get; set; }
 }

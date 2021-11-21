@@ -8,8 +8,8 @@ namespace DTOs
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
-        public TimeSpan EstimatedCompletionTime { get; set; }
+        public int EstimatedCompletionTimeInHrs { get; set; }
         public int EnrolledUsersCount { get; set; }
-        public List<LearningPathPillarDTO> LearningPathPillarDTOs { get; set; }
+        public List<LearningRessourceDTO> LearningRessourceDTOs { get; set; }
     }
 }

@@ -144,7 +144,7 @@
     }
     public async Task Chat()
     {
-        await Index.hubConnection.InvokeAsync("Chat", new MessageDTO
+        await hubConnection.InvokeAsync("Chat", new MessageDTO
         {
             Message = message,
             LearningPathId = LearnPathId,

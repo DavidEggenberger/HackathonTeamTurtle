@@ -19,7 +19,7 @@
                     <div class="ProfileSection">
                         <h3>Hello, @context.User.Identity.Name!</h3>
                         <img height="30" style="margin-left: 5px; cursor: pointer;" src="/settings.png" @onclick='() => Navigation.NavigateTo("profile", true)' />
-                        <button @onclick="BeginLogout"><a>Log out</a></button>
+                        <button style="outline: none !important; border: none !important;" @onclick="BeginLogout"><a>Log out</a></button>
                     </div>
                 </Authorized>
             </AuthorizeView>

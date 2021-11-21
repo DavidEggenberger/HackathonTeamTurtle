@@ -44,14 +44,14 @@ namespace WebClient
             {
                 builder.Services.AddOidcAuthentication(options =>
                 {
-                    options.ProviderOptions.Authority = "https://snorkelsg.azurewebsites.net/";
+                    options.ProviderOptions.Authority = "https://teamturtles.azurewebsites.net/";
                     options.ProviderOptions.ClientId = "BlazorClient";
                     options.ProviderOptions.ResponseType = "code";
                     options.ProviderOptions.DefaultScopes.Add("API");
                     options.AuthenticationPaths.LogOutCallbackPath = "/";
-                    options.AuthenticationPaths.LogOutPath = "https://snorkelsg.azurewebsites.net/logout";
-                    options.AuthenticationPaths.RemoteProfilePath = "https://snorkelsg.azurewebsites.net/profile";
-                    options.AuthenticationPaths.RemoteRegisterPath = "https://snorkelsg.azurewebsites.net/login";
+                    options.AuthenticationPaths.LogOutPath = "https://teamturtles.azurewebsites.net/logout";
+                    options.AuthenticationPaths.RemoteProfilePath = "https://teamturtles.azurewebsites.net/profile";
+                    options.AuthenticationPaths.RemoteRegisterPath = "https://teamturtles.azurewebsites.net/login";
                 });
             }
 

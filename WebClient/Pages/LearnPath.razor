@@ -37,12 +37,12 @@
         <h3>Ask questions, empower others!</h3>
         <div class="Chat">
             <div class="messages">
+                <div class="onlineUsers" style="margin-bottom: 10px; border-bottom: 3px solid white;">
+                    <h5 style="text-decoration: none; margin: 4px 0;">There are currently: @users.Count() 🐢 online</h5>
+                    <h5 style="text-decoration: none; margin: 4px 0;" @onclick='() => navigation.NavigateTo("/Profile")'>You only appear if you have a public profile</h5>
+                </div>
                 @if (messages != null)
                 {
-                    @foreach (var item in users)
-                    {
-                        <p>@item.UserName</p>
-                    }
                     @foreach (var item in messages)
                     {
                         <div class="message">
@@ -60,16 +60,16 @@
                         </Authorized>
                         <NotAuthorized>
                             <input @bind="message"/>
-                            <button @onclick='() => navigation.NavigateTo("/authentication/login")'>Login to Enroll</button>
+                            <button @onclick='() => navigation.NavigateTo("/authentication/login")'>Login to Enroll and Chat</button>
                         </NotAuthorized>
                     </AuthorizeView>
                 </div>
             }
             else
             {
-                <div class="chatButton">
+                <div class="chatButton" style="display: grid; justify-content: center; align-content: center;">
                     <input @bind="message"/>
-                    <button @onclick='Chat'>Send Message</button>
+                    <button style="margin-top: 5px;" @onclick='Chat'>Send Message</button>
                 </div>
             }
         </div>
@@ -99,6 +99,7 @@
         else
         {
             learningPathDTO = await httpClientFactory.CreateClient("UnauthenticatedHttpClient").GetFromJsonAsync<LearningPathDTO>($"/api/learningpath/{LearnPathId}");
+            users = await httpClientFactory.CreateClient("UnauthenticatedHttpClient").GetFromJsonAsync<List<ApplicationUserDTO>>($"/api/applicationuser/{LearnPathId}");
         }
     }
     public async Task EnrollInLearningPath()

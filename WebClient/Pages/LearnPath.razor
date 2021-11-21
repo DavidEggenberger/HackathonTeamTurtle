@@ -1,12 +1,63 @@
 ﻿@page "/LearnPath/{LearnPathId:guid}"
 @inject IHttpClientFactory httpClientFactory 
+@inject NavigationManager navigation
+ 
+<div class="LearnPathContainer">
+    <div class="LearnPathSection">
+        <div class="header">
+            @if (learningPathDTO != null)
+            {
+                if (learningPathDTO.RetrievingUserEnrolled)
+                {
+                    <button @onclick="async() => await UnEnrollInLearningPath()">Unenroll from LearningPath</button>
+                }
+                else
+                {
+                    <AuthorizeView>
+                        <Authorized>
+                            <button @onclick="async() => await EnrollInLearningPath()">Enroll in LearningPath</button>
+                        </Authorized>
+                        <NotAuthorized>
+                            <button @onclick='() => navigation.NavigateTo("/authnetication/login", true)'>Login to Enroll in LearningPath</button>
+                        </NotAuthorized>
+                    </AuthorizeView>
+                }
+            }
+        </div>
+    </div>
+    <div class="ChatSection">
+        <h3>Ask questions, empower others!</h3>
+        <div class="Chat">
 
+        </div>
+    </div>
+</div>
 
-@code {
-    private LearningPathDTO learningPathDTOs;
+@code{
+    [CascadingParameter]
+    public HubConnection HubConnection { get; set; }
+    private LearningPathDTO learningPathDTO;
+    [Parameter]
     public Guid LearnPathId { get; set; }
     protected override async Task OnInitializedAsync()
     {
-        learningPathDTOs = await httpClientFactory.CreateClient("WebAPI").GetFromJsonAsync<LearningPathDTO>($"api/learningpath/{LearnPathId}");
+        if(Index.hubConnection?.State == HubConnectionState.Connected)
+        {
+            learningPathDTO = await httpClientFactory.CreateClient("WebAPI").GetFromJsonAsync<LearningPathDTO>($"/api/learningpath/{LearnPathId}");
+        }
+        else
+        {
+            learningPathDTO = await httpClientFactory.CreateClient("UnauthenticatedHttpClient").GetFromJsonAsync<LearningPathDTO>($"/api/learningpath/{LearnPathId}");
+        }
+    }
+    public async Task EnrollInLearningPath()
+    {
+        await httpClientFactory.CreateClient("WebAPI").PostAsync($"/api/learningpath/{LearnPathId}", new StringContent(string.Empty));
+        learningPathDTO = await httpClientFactory.CreateClient("WebAPI").GetFromJsonAsync<LearningPathDTO>($"/api/learningpath/{LearnPathId}");
+    }
+    public async Task UnEnrollInLearningPath()
+    {
+        await httpClientFactory.CreateClient("WebAPI").PostAsync($"/api/learningpath/unenroll/{LearnPathId}", new StringContent(string.Empty));
+        learningPathDTO = await httpClientFactory.CreateClient("WebAPI").GetFromJsonAsync<LearningPathDTO>($"/api/learningpath/{LearnPathId}");
     }
 }

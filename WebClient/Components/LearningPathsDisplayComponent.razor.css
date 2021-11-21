@@ -1,6 +1,7 @@
 ﻿.LearningPathDisplayComponent{
     display: grid;
     grid-template-rows: 50px 1fr;
+    height: 100%;
 }
 .Title{
     box-sizing: border-box;
@@ -18,4 +19,26 @@ button {
     background: rgba(62,180,137,1);
     border-radius: 5px;
     font-size: 24px;
+}
+.LearningPath{
+    height: 200px;
+    width: 160px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 5px;
+    padding: 5px;
+}
+.LearningPathsOverview{
+    height: 100%;
+    display: flex;
+    padding-top: 5px;
+    box-sizing: border-box;
+    overflow-y: auto;
+}
+.btn{
+    font-size: 16px;
+    width: 70px;
+}
+.btnSection{
+    display: flex;
+    justify-content: space-between;
 }

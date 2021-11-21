@@ -137,5 +137,6 @@
     public async Task PostLearningPath()
     {
         await httpClientFactory.CreateClient("WebAPI").PostAsJsonAsync<LearningPathDTO>("api/learningpath", configuredLearningPath);
+        navigationManager.NavigateTo("/");
     }
 }

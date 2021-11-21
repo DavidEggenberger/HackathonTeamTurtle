@@ -7,14 +7,51 @@
         <button @onclick='() => navigationManager.NavigateTo("CreateNewLearningPath")'>Create new LearningPath</button>
     </div>
     <div class="LearningPathsOverview">
-
+        @if (learningPathDTOs != null)
+        {
+            @foreach (var learningPath in learningPathDTOs)
+            {
+                if (claimsPrincipal.Identity.IsAuthenticated && claimsPrincipal.Claims.Where(c => c.Type == "sub").First().Value == learningPath.UserId)
+                {
+                    <div class="LearningPath">
+                        <h3>@learningPath.Name</h3>
+                        <h4>Join @learningPath.EnrolledUsersCount in learning</h4>
+                        <h4>Estimated time in hrs: @learningPath.EstimatedCompletionTimeInHrs</h4>
+                        <div class="btnSection">
+                            <button class="btn" @onclick='() => navigationManager.NavigateTo($"Learnpath/{learningPath.Id}")'>Explore</button>
+                            <button class="btn" @onclick="async() => await DeleteLearningPath(learningPath.Id)">Delete</button>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="LearningPath">
+                        <h3>@learningPath.Name</h3
+                        <h4>Join @learningPath.EnrolledUsersCount in learning</h4>
+                        <h4>Estimated time in hrs: @learningPath.EstimatedCompletionTimeInHrs</h4>
+                        <div class="btnSection">
+                            <button class="btn" @onclick='() => navigationManager.NavigateTo($"Learnpath/{learningPath.Id}")'>Explore</button>
+                        </div>
+                    </div>
+                }
+            }
+        }
     </div>
 </div>
 
 @code{
+    [CascadingParameter]
+    public Task<AuthenticationState> AuthState { get; set; }
     private List<LearningPathDTO> learningPathDTOs;
+    ClaimsPrincipal claimsPrincipal;
     protected override async Task OnInitializedAsync()
     {
+        claimsPrincipal = (await AuthState).User;
+        learningPathDTOs = await httpClientFactory.CreateClient("UnauthenticatedHttpClient").GetFromJsonAsync<List<LearningPathDTO>>("api/learningpath");
+    }
+    public async Task DeleteLearningPath(Guid id)
+    {
+        await httpClientFactory.CreateClient("WebAPI").DeleteAsync($"api/learningpath/{id}");
         learningPathDTOs = await httpClientFactory.CreateClient("UnauthenticatedHttpClient").GetFromJsonAsync<List<LearningPathDTO>>("api/learningpath");
     }
 }

@@ -1,0 +1,31 @@
+﻿.LearnPathContainer {
+    height: 100%;
+    width: 100%;
+    box-sizing: border-box;
+    display: grid;
+    grid-template-columns: 1fr 200px;
+    padding: 10px;
+}
+.ChatSection{
+    border-radius: 5px;
+    border: 2px solid white;
+    background: rgba(255, 255, 255, 0.3);
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 5px;
+    box-sizing: border-box;
+    text-decoration: underline;
+    text-decoration-color: white;
+}
+.LearnPathSection{
+    height: 100%;
+    width: 100%;
+    display: grid;
+    grid-template-rows: 60px 1fr;
+}
+header{
+    display: flex;
+    justify-content: space-between;
+}

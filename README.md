@@ -4,3 +4,4 @@ TeamTurtle strives to be an inclusive learning platform! People can learn new th
 
 <img src="https://raw.githubusercontent.com/DavidEggenberger/HackathonTeamTurtle/master/TeamTurtle.PNG"/>
 <img src="https://raw.githubusercontent.com/DavidEggenberger/HackathonTeamTurtle/master/TeamTurtle1.PNG"/>
+<img src="https://raw.githubusercontent.com/DavidEggenberger/HackathonTeamTurtle/master/TeamTurtle2.PNG"/>
